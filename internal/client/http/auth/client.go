@@ -5,9 +5,8 @@ import (
 	"testing"
 
 	"api-tests-template/internal/constants/path"
-	authModels "api-tests-template/internal/managers/auth/models"
-
 	apiRunner "api-tests-template/internal/helpers/api-runner"
+	authModels "api-tests-template/internal/managers/auth/models"
 )
 
 // HttpPostAuthLogin выполняет POST-запрос для авторизации пользователя
@@ -17,5 +16,13 @@ func HttpPostAuthLogin(t *testing.T, request authModels.LoginRequest) *http.Resp
 		JSON(request).
 		Expect(t).
 		Status(http.StatusOK).
+		End().Response
+}
+
+func HttpPostAuthRegister(t *testing.T, request authModels.RegisterRequest) *http.Response {
+	return apiRunner.GetRunner().Create().Post(path.AuthRegisterPath).
+		ContentType("application/json").
+		JSON(request).
+		Expect(t).
 		End().Response
 }

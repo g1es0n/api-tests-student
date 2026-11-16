@@ -21,3 +21,13 @@ func TearDownSuite() {
 func Precondition(text string) {
 	utils.LogWithLabelAndTimeStamp("Precondition", text)
 }
+
+// Step выводит описание шага теста с меткой [Step].
+func Step(text string) {
+	utils.LogWithLabelAndTimeStamp("Step", text)
+}
+
+// Check выводит описание проверки с меткой [Check].
+func Check(text string) {
+	utils.LogWithLabelAndTimeStamp("Check", text)
+}

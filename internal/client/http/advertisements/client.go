@@ -8,7 +8,6 @@ import (
 	apiRunner "api-tests-template/internal/helpers/api-runner"
 )
 
-// HttpGetAdvertisements выполняет поиск объявлений по подстроке в названии, ожидает 200
 func HttpGetAdvertisements(t *testing.T, token, textForSearch string) *http.Response {
 	return apiRunner.GetRunner().Auth(token).Create().Get(path.AdvertisementsPath).
 		Query("search", textForSearch).

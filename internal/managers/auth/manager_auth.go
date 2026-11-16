@@ -3,11 +3,13 @@ package auth
 import (
 	"encoding/json"
 	"io"
+	"net/http"
 	"testing"
 
 	"github.com/stretchr/testify/require"
 
 	"api-tests-template/internal/client/http/auth"
+	"api-tests-template/internal/helpers/response"
 	"api-tests-template/internal/managers/auth/models"
 )
 
@@ -32,4 +34,23 @@ func Login(t *testing.T, username, password string) models.LoginOkResponse {
 	require.NoError(t, err)
 
 	return loginResponse
+}
+
+// RegisterOrLogin регистрирует пользователя или входит в уже существующий аккаунт.
+func RegisterOrLogin(t *testing.T, request models.RegisterRequest) models.LoginOkResponse {
+	t.Helper()
+	raw := auth.HttpPostAuthRegister(t, request)
+	body := response.ReadBody(t, raw)
+
+	switch raw.StatusCode {
+	case http.StatusCreated:
+		return response.Decode[models.LoginOkResponse](t, body)
+	case http.StatusConflict:
+		return Login(t, request.Email, request.Password)
+	default:
+		require.Failf(t, "Не удалось зарегистрировать пользователя",
+			"Ожидался HTTP %d или %d, получен HTTP %d. Тело ответа: %s",
+			http.StatusCreated, http.StatusConflict, raw.StatusCode, string(body))
+		return models.LoginOkResponse{}
+	}
 }

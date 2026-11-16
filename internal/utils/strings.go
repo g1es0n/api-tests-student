@@ -2,6 +2,7 @@ package utils
 
 import "unicode"
 
+// MixCase чередует верхний и нижний регистр символов строки.
 func MixCase(s string) string {
 	runes := []rune(s)
 	for i, r := range runes {
